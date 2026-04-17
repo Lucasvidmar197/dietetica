@@ -3,195 +3,770 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEMO - Vitamina D Dietética</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Vitamina D Dietética</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* --- ESTILOS ORIGINALES MANTENIDOS (No tocados) --- */
         :root {
             --verde-principal: #296d36;
+            --verde-claro: #3a9a4a;
             --naranja-acento: #cc6b29;
             --amarillo-sol: #e8c61a;
             --fondo-claro: #f0f7f4;
             --texto-oscuro: #333333;
+            --blanco: #ffffff;
+            --gris-suave: #f8f8f8;
+            --sombra: rgba(0,0,0,0.08);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--fondo-claro); color: var(--texto-oscuro); overflow-x: hidden; font-family: 'Poppins', sans-serif; }
 
-        body { background-color: var(--fondo-claro); color: var(--texto-oscuro); overflow-x: hidden; position: relative; }
+        /* ─── NAV ─── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 40px;
+            box-shadow: 0 2px 12px var(--sombra);
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--verde-principal);
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+        .nav-logo span { color: var(--naranja-acento); }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--texto-oscuro);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--verde-principal); }
+        .nav-carrito-btn {
+            background: var(--verde-principal);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, transform 0.2s;
+            position: relative;
+        }
+        .nav-carrito-btn:hover { background: var(--verde-claro); transform: translateY(-1px); }
+        .carrito-badge {
+            background: var(--naranja-acento);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
 
+        /* ─── HERO ─── */
         .hero { width: 100%; background-color: #fff; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .hero img { width: 100%; max-width: 1200px; height: auto; display: block; margin: 0 auto; }
 
+        /* ─── ABOUT ─── */
         .about-section { padding: 80px 20px; max-width: 900px; margin: 0 auto; text-align: center; animation: fadeIn 1.5s ease-in-out; }
-        .about-section h1 { color: var(--verde-principal); font-size: 2.5rem; margin-bottom: 20px; }
-        .about-section p { font-size: 1.1rem; line-height: 1.6; color: #555; margin-bottom: 30px; }
-
+        .about-section h1 { color: var(--verde-principal); font-size: 2.5rem; margin-bottom: 20px; font-family: 'Playfair Display', serif; }
+        .about-section p { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 30px; }
         .btn-principal { display: inline-block; background-color: var(--naranja-acento); color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(204, 107, 41, 0.3); }
         .btn-principal:hover { background-color: #b55a22; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(204, 107, 41, 0.4); }
 
-        .marcas-section { background-color: white; padding: 50px 0; overflow: hidden; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .marcas-section h2 { text-align: center; color: var(--verde-principal); margin-bottom: 30px; font-size: 2rem; }
+        /* ─── CATEGORIAS ─── */
+        .categorias-section {
+            background: white;
+            padding: 70px 20px;
+        }
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--verde-principal); margin-bottom: 8px; }
+        .section-header p { color: #888; font-size: 1rem; }
 
-        .slider { width: 100%; overflow: hidden; position: relative; }
+        .categorias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .categoria-card {
+            background: var(--fondo-claro);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .categoria-card:hover, .categoria-card.activa {
+            border-color: var(--verde-principal);
+            background: white;
+            box-shadow: 0 6px 20px rgba(41,109,54,0.12);
+            transform: translateY(-4px);
+        }
+        .categoria-card .icono {
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .categoria-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--texto-oscuro); }
+
+        /* ─── MARCAS ─── */
+        .marcas-section { background-color: var(--fondo-claro); padding: 50px 0; overflow: hidden; }
+        .marcas-section h2 { text-align: center; color: var(--verde-principal); margin-bottom: 30px; font-size: 2rem; font-family: 'Playfair Display', serif; }
+        .slider { width: 100%; overflow: hidden; }
         .slide-track { display: flex; width: calc(250px * 10); animation: scroll 20s linear infinite; }
         .slide { width: 250px; padding: 0 20px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #888; font-size: 1.2rem; }
-        .slide-caja { background: var(--fondo-claro); padding: 15px 30px; border-radius: 10px; border: 2px solid #e0e0e0; white-space: nowrap; }
-
+        .slide-caja { background: white; padding: 15px 30px; border-radius: 10px; border: 2px solid #e0e0e0; white-space: nowrap; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-250px * 5)); } }
 
+        /* ─── PROMOS ─── */
+        .promos-section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+        .promos-section .section-header h2 { color: var(--naranja-acento); }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 28px;
+        }
+
+        .producto-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--sombra);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .producto-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+
+        .producto-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--fondo-claro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+        }
+        .badge-promo {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--naranja-acento);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .producto-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .producto-categoria-tag {
+            font-size: 0.75rem;
+            color: var(--verde-claro);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .producto-nombre { font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; color: var(--texto-oscuro); }
+        .producto-desc { font-size: 0.85rem; color: #888; line-height: 1.5; flex: 1; margin-bottom: 14px; }
+
+        .producto-precio-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .precio-actual { font-size: 1.4rem; font-weight: 800; color: var(--verde-principal); }
+        .precio-tachado { font-size: 0.9rem; color: #bbb; text-decoration: line-through; }
+
+        .cantidad-control { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .cantidad-btn { background: var(--fondo-claro); border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 1rem; cursor: pointer; color: var(--texto-oscuro); font-weight: 700; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+        .cantidad-btn:hover { background: #dde; }
+        .cantidad-num { font-weight: 700; font-size: 1rem; min-width: 20px; text-align: center; }
+
+        .btn-agregar {
+            width: 100%;
+            background: var(--verde-principal);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-agregar:hover { background: var(--verde-claro); transform: translateY(-1px); }
+        .btn-agregar.agregado { background: var(--naranja-acento); }
+
+        /* ─── FILTROS ─── */
+        .filtros-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+            justify-content: center;
+        }
+        .filtro-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #666;
+        }
+        .filtro-btn:hover, .filtro-btn.activo { border-color: var(--verde-principal); color: var(--verde-principal); background: rgba(41,109,54,0.05); }
+
+        /* ─── CARRITO PANEL ─── */
+        .carrito-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.45); z-index: 800; display: none;
+            animation: fadeIn 0.3s;
+        }
+        .carrito-panel {
+            position: fixed; top: 0; right: -420px; width: 420px; max-width: 95vw;
+            height: 100%; background: white; z-index: 900;
+            box-shadow: -8px 0 30px rgba(0,0,0,0.15);
+            transition: right 0.4s cubic-bezier(.4,0,.2,1);
+            display: flex; flex-direction: column;
+        }
+        .carrito-panel.abierto { right: 0; }
+        .carrito-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .carrito-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--verde-principal); }
+        .carrito-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; transition: color 0.2s; }
+        .carrito-close:hover { color: var(--texto-oscuro); }
+        .carrito-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
+        .carrito-vacio { text-align: center; color: #aaa; padding: 60px 20px; }
+        .carrito-vacio i { font-size: 3rem; margin-bottom: 16px; display: block; }
+
+        .carrito-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 0; border-bottom: 1px solid #f0f0f0;
+        }
+        .carrito-item-emoji { font-size: 2.2rem; min-width: 48px; text-align: center; }
+        .carrito-item-info { flex: 1; }
+        .carrito-item-nombre { font-weight: 600; font-size: 0.95rem; }
+        .carrito-item-precio { color: var(--verde-principal); font-weight: 700; font-size: 0.9rem; }
+        .carrito-item-qty { color: #999; font-size: 0.8rem; }
+        .carrito-item-remove { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1rem; transition: color 0.2s; }
+        .carrito-item-remove:hover { color: #e74c3c; }
+
+        .carrito-footer { padding: 20px 24px; border-top: 1px solid #eee; }
+        .carrito-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .carrito-total span:first-child { font-size: 1rem; color: #666; }
+        .carrito-total strong { font-size: 1.4rem; color: var(--verde-principal); }
+        .btn-comprar-todo {
+            width: 100%;
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(37,211,102,0.35);
+        }
+        .btn-comprar-todo:hover { background: #1ea855; transform: translateY(-2px); }
+
+        /* ─── MAPA ─── */
         .mapa-section { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        .mapa-section h2 { color: var(--naranja-acento); margin-bottom: 10px; font-size: 2rem; }
+        .mapa-section h2 { color: var(--naranja-acento); margin-bottom: 10px; font-size: 2rem; font-family: 'Playfair Display', serif; }
         .mapa-section p { font-size: 1.1rem; margin-bottom: 30px; color: #444; }
         .map-container { border-radius: 15px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid white; }
 
+        /* ─── WHATSAPP ─── */
         .whatsapp-flotante { position: fixed; width: 60px; height: 60px; bottom: 40px; right: 40px; background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); z-index: 90; display: flex; align-items: center; justify-content: center; text-decoration: none; animation: pulse 2s infinite; transition: all 0.3s ease; }
         .whatsapp-flotante:hover { background-color: #128C7E; transform: scale(1.1); }
 
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        @media (max-width: 768px) { .whatsapp-flotante { bottom: 20px; right: 20px; } .about-section h1 { font-size: 2rem; } }
-
-        /* --- NUEVOS ESTILOS PARA LA DEMO INTERSTICIAL --- */
-        #vidmar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(255, 255, 255, 0.96); /* Fondo semi-transparente blanco */
-            z-index: 1000; /* Asegurar que esté por encima de TODO */
-            display: none; /* Oculto por defecto */
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            animation: fadeInOverlay 0.5s ease-out; /* Animación de aparición suave */
-            cursor: default;
+        /* ─── FOOTER ─── */
+        footer {
+            background: #1a1a2e;
+            color: #ccc;
+            padding: 60px 40px 30px;
         }
-
-        @keyframes fadeInOverlay {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto 40px;
         }
-
-        #vidmar-watermark {
-            font-size: 15vw; /* Tamaño gigantesco relativo al ancho de pantalla */
-            font-weight: 800;
-            color: rgba(0, 0, 0, 0.1); /* Texto negro sutil (marca de agua) */
-            text-transform: uppercase;
-            letter-spacing: 20px;
-            transform: rotate(-15deg); /* Ligeramente rotado */
-            user-select: none; /* No seleccionable */
-            margin-bottom: -5vh; /* Ajuste de espacio */
-        }
-
-        #vidmar-close-btn {
-            background-color: var(--texto-oscuro);
+        .footer-col h4 {
             color: white;
-            border: none;
-            padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Playfair Display', serif;
+        }
+        .footer-col p, .footer-col a {
+            font-size: 0.9rem;
+            line-height: 2;
+            color: #aaa;
+            text-decoration: none;
+            display: block;
+            transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--amarillo-sol); }
+        .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: white; font-weight: 900; margin-bottom: 10px; }
+        .footer-brand span { color: var(--naranja-acento); }
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 24px;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #666;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .footer-social { display: flex; gap: 14px; margin-top: 16px; }
+        .footer-social a {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: #2a2a3e;
+            display: flex; align-items: center; justify-content: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .footer-social a:hover { background: var(--verde-principal); color: white; }
+
+        /* ─── ANIMACIONES ─── */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            nav { padding: 12px 20px; }
+            .nav-links { display: none; }
+            .whatsapp-flotante { bottom: 20px; right: 20px; }
+            .about-section h1 { font-size: 2rem; }
+            .carrito-panel { width: 100vw; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 110px;
+            right: 40px;
+            background: var(--verde-principal);
+            color: white;
+            padding: 12px 20px;
             border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            position: relative;
-            z-index: 1001;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 9999;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 1.7s forwards;
+            box-shadow: 0 4px 15px rgba(41,109,54,0.4);
         }
-
-        #vidmar-close-btn:hover {
-            background-color: #555;
-        }
-        
-        #vidmar-close-btn:active {
-            transform: translateY(2px);
-        }
-
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
     </style>
 </head>
 <body>
 
+    <!-- ─── NAV ─── -->
+    <nav>
+        <div class="nav-logo">Vitamina <span>D</span> Dietética</div>
+        <ul class="nav-links">
+            <li><a href="#categorias">Categorías</a></li>
+            <li><a href="#promos">Promos</a></li>
+            <li><a href="#mapa">Visitanos</a></li>
+        </ul>
+        <button class="nav-carrito-btn" onclick="toggleCarrito()">
+            <i class="fas fa-shopping-basket"></i>
+            Mi carrito
+            <span class="carrito-badge" id="badge">0</span>
+        </button>
+    </nav>
+
+    <!-- ─── HERO ─── -->
     <header class="hero">
         <img src="https://i.postimg.cc/QtvPGKbw/Gemini-Generated-Image-vjwhw1vjwhw1vjwh.png" alt="Banner Vitamina D Dietética">
     </header>
 
+    <!-- ─── ABOUT ─── -->
     <section class="about-section">
         <h1>Tu rincón natural</h1>
         <p>En <strong>Vitamina D Dietética</strong> nos apasiona promover un estilo de vida saludable. Ofrecemos la mejor selección de productos naturales, frutos secos, cereales, suplementos y opciones sin TACC. Nuestro objetivo es brindarte calidad y atención personalizada para que encuentres todo lo que necesitas para tu bienestar.</p>
-        
-        <a href="https://wa.me/5491144468486?text=Hola!%20Vengo%20de%20la%20página%20web%20y%20quiero%20hacer%20un%20pedido." target="_blank" class="btn-principal">
+        <a href="https://wa.me/5491144468486?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20web%20y%20quiero%20hacer%20un%20pedido." target="_blank" class="btn-principal">
             Hacer un pedido ahora
         </a>
     </section>
 
-    <section class="marcas-section">
-        <h2>Con marcas que trabajamos</h2>
-        <div class="slider">
-            <div class="slide-track">
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
-                <div class="slide"><div class="slide-caja">demo</div></div>
+    <!-- ─── CATEGORÍAS ─── -->
+    <section class="categorias-section" id="categorias">
+        <div class="section-header">
+            <h2>Nuestras Categorías</h2>
+            <p>Encontrá todo lo que necesitás para tu bienestar</p>
+        </div>
+        <div class="categorias-grid">
+            <div class="categoria-card" onclick="filtrarCategoria('Frutos Secos')">
+                <span class="icono">🥜</span>
+                <h3>Frutos Secos</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Cereales')">
+                <span class="icono">🌾</span>
+                <h3>Cereales</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Suplementos')">
+                <span class="icono">💊</span>
+                <h3>Suplementos</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Sin TACC')">
+                <span class="icono">🌿</span>
+                <h3>Sin TACC</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Infusiones')">
+                <span class="icono">🍵</span>
+                <h3>Infusiones</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Snacks')">
+                <span class="icono">🍫</span>
+                <h3>Snacks Saludables</h3>
             </div>
         </div>
     </section>
 
-    <section class="mapa-section">
-        <h2>Visitanos</h2>
-        <p><i class="fas fa-map-marker-alt" style="color: var(--verde-principal);"></i> Nicolás Videla 147, B1878, Quilmes, PBA.</p>
-        
-        <div class="map-container">
-            <iframe 
-                src="https://maps.google.com/maps?q=Nicol%C3%A1s%20Videla%20147,%20Quilmes,%20Provincia%20de%20Buenos%20Aires&t=&z=15&ie=UTF8&iwloc=&output=embed" 
-                width="100%" 
-                height="400" 
-                style="border:0;" 
-                allowfullscreen="" 
-                loading="lazy" 
-                referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
+    <!-- ─── MARCAS ─── -->
+    <section class="marcas-section">
+        <h2>Marcas con las que trabajamos</h2>
+        <div class="slider">
+            <div class="slide-track">
+                <div class="slide"><div class="slide-caja">Granja del Sol</div></div>
+                <div class="slide"><div class="slide-caja">Arcor Natura</div></div>
+                <div class="slide"><div class="slide-caja">Quaker</div></div>
+                <div class="slide"><div class="slide-caja">Knorr</div></div>
+                <div class="slide"><div class="slide-caja">La Asunción</div></div>
+                <div class="slide"><div class="slide-caja">Granja del Sol</div></div>
+                <div class="slide"><div class="slide-caja">Arcor Natura</div></div>
+                <div class="slide"><div class="slide-caja">Quaker</div></div>
+                <div class="slide"><div class="slide-caja">Knorr</div></div>
+                <div class="slide"><div class="slide-caja">La Asunción</div></div>
+            </div>
         </div>
     </section>
 
-    <a href="https://wa.me/5491144468486?text=Hola!%20Vengo%20de%20la%20página%20web%20y%20tengo%20una%20consulta." class="whatsapp-flotante" target="_blank" title="Envianos un mensaje">
+    <!-- ─── PROMOS ─── -->
+    <section class="promos-section" id="promos">
+        <div class="section-header">
+            <h2>🔥 Promos de la semana</h2>
+            <p>Precios especiales en nuestros productos más populares</p>
+        </div>
+
+        <div class="filtros-bar" id="filtros">
+            <button class="filtro-btn activo" onclick="filtrarProductos('todos', this)">Todos</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Frutos Secos', this)">🥜 Frutos Secos</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Cereales', this)">🌾 Cereales</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Suplementos', this)">💊 Suplementos</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Sin TACC', this)">🌿 Sin TACC</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Infusiones', this)">🍵 Infusiones</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Snacks', this)">🍫 Snacks</button>
+        </div>
+
+        <div class="productos-grid" id="productos-grid"></div>
+    </section>
+
+    <!-- ─── MAPA ─── -->
+    <section class="mapa-section" id="mapa">
+        <h2>Visitanos</h2>
+        <p><i class="fas fa-map-marker-alt" style="color: var(--verde-principal);"></i> Nicolás Videla 147, B1878, Quilmes, PBA.</p>
+        <div class="map-container">
+            <iframe src="https://maps.google.com/maps?q=Nicol%C3%A1s%20Videla%20147,%20Quilmes,%20Provincia%20de%20Buenos%20Aires&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </section>
+
+    <!-- ─── WHATSAPP ─── -->
+    <a href="https://wa.me/5491144468486?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20web%20y%20tengo%20una%20consulta." class="whatsapp-flotante" target="_blank" title="Envianos un mensaje">
         <i class="fab fa-whatsapp"></i>
     </a>
 
-    <div id="vidmar-overlay">
-        <div id="vidmar-watermark">VIDMAR & GUERRERO</div>
-        <button id="vidmar-close-btn">Cerrar</button>
+    <!-- ─── FOOTER ─── -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">Vitamina <span>D</span> Dietética</div>
+                <p>Tu tienda de productos naturales y saludables en Quilmes, Buenos Aires.</p>
+                <div class="footer-social">
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/5491144468486" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="mailto:vitamitaD@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navegación</h4>
+                <a href="#categorias">Categorías</a>
+                <a href="#promos">Promos</a>
+                <a href="#mapa">Cómo llegar</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <a href="mailto:vitamitaD@gmail.com"><i class="fas fa-envelope" style="margin-right:6px;"></i> vitamitaD@gmail.com</a>
+                <a href="https://wa.me/5491144468486" target="_blank"><i class="fab fa-whatsapp" style="margin-right:6px;"></i> +54 9 11 4446-8486</a>
+                <p><i class="fas fa-map-marker-alt" style="margin-right:6px;"></i> Nicolás Videla 147, Quilmes</p>
+            </div>
+            <div class="footer-col">
+                <h4>Horarios</h4>
+                <p>Lunes a Viernes: 9:00 – 19:00</p>
+                <p>Sábados: 9:00 – 14:00</p>
+                <p>Domingos: Cerrado</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 <strong>Vitamina D Dietética</strong> — Todos los derechos reservados.</p>
+            <p style="margin-top:4px;">Diseño y desarrollo por <strong>Vidmar &amp; Guerrero</strong></p>
+        </div>
+    </footer>
+
+    <!-- ─── CARRITO PANEL ─── -->
+    <div class="carrito-overlay" id="carritoOverlay" onclick="toggleCarrito()"></div>
+    <div class="carrito-panel" id="carritoPanel">
+        <div class="carrito-header">
+            <h3>🛒 Mi Carrito</h3>
+            <button class="carrito-close" onclick="toggleCarrito()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="carrito-items" id="carritoItems">
+            <div class="carrito-vacio" id="carritoVacio">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+            </div>
+        </div>
+        <div class="carrito-footer">
+            <div class="carrito-total">
+                <span>Total</span>
+                <strong id="carritoTotal">$0</strong>
+            </div>
+            <button class="btn-comprar-todo" onclick="comprarPorWhatsapp()">
+                <i class="fab fa-whatsapp"></i> Comprar por WhatsApp
+            </button>
+        </div>
     </div>
 
     <script>
-        // Referencias a los elementos
-        const overlay = document.getElementById('vidmar-overlay');
-        const closeBtn = document.getElementById('vidmar-close-btn');
+    // ─── DATA ───
+    const productos = [
+        { id: 1, nombre: "Mix de Frutos Secos Premium", categoria: "Frutos Secos", emoji: "🥜", precio: 2800, precioAntes: 3500, desc: "Almendras, nueces, castañas y más. 500g.", promo: true },
+        { id: 2, nombre: "Almendras Tostadas sin sal", categoria: "Frutos Secos", emoji: "🌰", precio: 1950, precioAntes: 2400, desc: "Almendras seleccionadas. 250g.", promo: true },
+        { id: 3, nombre: "Avena Integral Orgánica", categoria: "Cereales", emoji: "🌾", precio: 890, precioAntes: 1100, desc: "Avena orgánica en copos. 500g.", promo: true },
+        { id: 4, nombre: "Granola artesanal con miel", categoria: "Cereales", emoji: "🍯", precio: 1650, precioAntes: null, desc: "Con nueces, pasas y miel natural. 400g." },
+        { id: 5, nombre: "Colágeno Hidrolizado", categoria: "Suplementos", emoji: "💊", precio: 3200, precioAntes: 3900, desc: "Colágeno tipo 1 y 3. 300g.", promo: true },
+        { id: 6, nombre: "Proteína Vegana Vainilla", categoria: "Suplementos", emoji: "🌱", precio: 4500, precioAntes: null, desc: "Base de arroz y arveja. 500g." },
+        { id: 7, nombre: "Pan Sin TACC Multigranos", categoria: "Sin TACC", emoji: "🍞", precio: 1200, precioAntes: 1450, desc: "Sin gluten, sin tacc. 400g.", promo: true },
+        { id: 8, nombre: "Galletitas de Arroz", categoria: "Sin TACC", emoji: "🌿", precio: 750, precioAntes: null, desc: "Sin gluten, ideales para snackear. 150g." },
+        { id: 9, nombre: "Té Verde Detox Blend", categoria: "Infusiones", emoji: "🍵", precio: 980, precioAntes: 1200, desc: "Con jengibre y limón. 30 saquitos.", promo: true },
+        { id: 10, nombre: "Yerba Mate Con Hierbas", categoria: "Infusiones", emoji: "🧉", precio: 1100, precioAntes: null, desc: "Blend especial con menta y burrito. 500g." },
+        { id: 11, nombre: "Barritas de Cereal Caseras", categoria: "Snacks", emoji: "🍫", precio: 650, precioAntes: 800, desc: "Avena, miel y chocolate. Pack x6.", promo: true },
+        { id: 12, nombre: "Chips de Banana Deshidratada", categoria: "Snacks", emoji: "🍌", precio: 870, precioAntes: null, desc: "100% natural, sin azúcar agregada. 200g." },
+    ];
 
-        // Función para mostrar la marca de agua/overlay
-        function showOverlay() {
-            overlay.style.display = 'flex';
+    let carrito = {};
+    let cantidades = {};
+    productos.forEach(p => { cantidades[p.id] = 1; });
+
+    // ─── RENDER PRODUCTOS ───
+    function renderProductos(lista) {
+        const grid = document.getElementById('productos-grid');
+        grid.innerHTML = '';
+        lista.forEach(p => {
+            const enCarrito = carrito[p.id];
+            grid.innerHTML += `
+            <div class="producto-card" data-cat="${p.categoria}">
+                <div class="producto-img">
+                    ${p.emoji}
+                    ${p.promo ? '<span class="badge-promo">🔥 Promo</span>' : ''}
+                </div>
+                <div class="producto-body">
+                    <div class="producto-categoria-tag">${p.categoria}</div>
+                    <div class="producto-nombre">${p.nombre}</div>
+                    <div class="producto-desc">${p.desc}</div>
+                    <div class="producto-precio-row">
+                        <span class="precio-actual">$${p.precio.toLocaleString('es-AR')}</span>
+                        ${p.precioAntes ? `<span class="precio-tachado">$${p.precioAntes.toLocaleString('es-AR')}</span>` : ''}
+                    </div>
+                    <div class="cantidad-control">
+                        <button class="cantidad-btn" onclick="cambiarCantidad(${p.id}, -1)">−</button>
+                        <span class="cantidad-num" id="qty-${p.id}">${cantidades[p.id]}</span>
+                        <button class="cantidad-btn" onclick="cambiarCantidad(${p.id}, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar ${enCarrito ? 'agregado' : ''}" id="btn-${p.id}" onclick="agregarAlCarrito(${p.id})">
+                        <i class="fas ${enCarrito ? 'fa-check' : 'fa-cart-plus'}"></i>
+                        ${enCarrito ? '¡Agregado!' : 'Agregar al carrito'}
+                    </button>
+                </div>
+            </div>`;
+        });
+    }
+
+    // ─── FILTROS ───
+    function filtrarProductos(cat, btn) {
+        document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+        if (btn) btn.classList.add('activo');
+        const filtrados = cat === 'todos' ? productos : productos.filter(p => p.categoria === cat);
+        renderProductos(filtrados);
+        document.getElementById('promos').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function filtrarCategoria(cat) {
+        document.getElementById('promos').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+            document.querySelectorAll('.filtro-btn').forEach(b => {
+                if (b.textContent.includes(cat)) { b.classList.add('activo'); b.click(); }
+                else b.classList.remove('activo');
+            });
+            filtrarProductos(cat, null);
+        }, 400);
+    }
+
+    // ─── CANTIDAD ───
+    function cambiarCantidad(id, delta) {
+        cantidades[id] = Math.max(1, (cantidades[id] || 1) + delta);
+        const el = document.getElementById('qty-' + id);
+        if (el) el.textContent = cantidades[id];
+        if (carrito[id]) {
+            carrito[id].cantidad = cantidades[id];
+            renderCarrito();
         }
+    }
 
-        // Función para ocultar la marca de agua/overlay
-        function hideOverlay() {
+    // ─── CARRITO ───
+    function agregarAlCarrito(id) {
+        const p = productos.find(x => x.id === id);
+        const qty = cantidades[id] || 1;
+        if (carrito[id]) {
+            carrito[id].cantidad += qty;
+        } else {
+            carrito[id] = { ...p, cantidad: qty };
+        }
+        renderCarrito();
+        const btn = document.getElementById('btn-' + id);
+        if (btn) {
+            btn.classList.add('agregado');
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
+        }
+        showToast(`✅ ${p.nombre} agregado`);
+        actualizarBadge();
+    }
+
+    function quitarDelCarrito(id) {
+        delete carrito[id];
+        renderCarrito();
+        const btn = document.getElementById('btn-' + id);
+        if (btn) {
+            btn.classList.remove('agregado');
+            btn.innerHTML = '<i class="fas fa-cart-plus"></i> Agregar al carrito';
+        }
+        actualizarBadge();
+    }
+
+    function renderCarrito() {
+        const items = Object.values(carrito);
+        const container = document.getElementById('carritoItems');
+        const vacio = document.getElementById('carritoVacio');
+        if (items.length === 0) {
+            container.innerHTML = '<div class="carrito-vacio" id="carritoVacio"><i class="fas fa-shopping-basket"></i><p>Tu carrito está vacío</p></div>';
+            document.getElementById('carritoTotal').textContent = '$0';
+            return;
+        }
+        container.innerHTML = items.map(item => `
+            <div class="carrito-item">
+                <span class="carrito-item-emoji">${item.emoji}</span>
+                <div class="carrito-item-info">
+                    <div class="carrito-item-nombre">${item.nombre}</div>
+                    <div class="carrito-item-precio">$${(item.precio * item.cantidad).toLocaleString('es-AR')}</div>
+                    <div class="carrito-item-qty">Cantidad: ${item.cantidad}</div>
+                </div>
+                <button class="carrito-item-remove" onclick="quitarDelCarrito(${item.id})"><i class="fas fa-trash-alt"></i></button>
+            </div>
+        `).join('');
+        const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
+        document.getElementById('carritoTotal').textContent = '$' + total.toLocaleString('es-AR');
+        actualizarBadge();
+    }
+
+    function actualizarBadge() {
+        const total = Object.values(carrito).reduce((s, i) => s + i.cantidad, 0);
+        document.getElementById('badge').textContent = total;
+    }
+
+    function toggleCarrito() {
+        const panel = document.getElementById('carritoPanel');
+        const overlay = document.getElementById('carritoOverlay');
+        const isOpen = panel.classList.contains('abierto');
+        if (isOpen) {
+            panel.classList.remove('abierto');
             overlay.style.display = 'none';
+        } else {
+            panel.classList.add('abierto');
+            overlay.style.display = 'block';
         }
+    }
 
-        // Evento de clic para el botón cerrar
-        closeBtn.addEventListener('click', hideOverlay);
+    // ─── COMPRAR POR WHATSAPP ───
+    function comprarPorWhatsapp() {
+        const items = Object.values(carrito);
+        if (items.length === 0) {
+            showToast('⚠️ Tu carrito está vacío');
+            return;
+        }
+        let lineas = items.map(i => `• ${i.nombre} (x${i.cantidad}) — $${(i.precio * i.cantidad).toLocaleString('es-AR')}`).join('\n');
+        const total = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
+        const msg = `Hola buenas! 😊 Quiero comprar los siguientes productos:\n\n${lineas}\n\n💰 *Total: $${total.toLocaleString('es-AR')}*\n\n¿Podría confirmar disponibilidad y coordinar la entrega? ¡Muchas gracias!`;
+        const url = `https://wa.me/5491144468486?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    }
 
-        // Iniciar el temporizador para mostrar cada 15 segundos (15000 ms)
-        setInterval(showOverlay, 15000);
+    // ─── TOAST ───
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2200);
+    }
+
+    // ─── INIT ───
+    renderProductos(productos);
     </script>
-
 </body>
 </html>
