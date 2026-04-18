@@ -1,528 +1,959 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ config('app.name', 'Pterodactyl') }}</title>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitamina D Dietética</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --verde-principal: #296d36;
+            --verde-claro: #3a9a4a;
+            --naranja-acento: #cc6b29;
+            --amarillo-sol: #e8c61a;
+            --fondo-claro: #f0f7f4;
+            --texto-oscuro: #333333;
+            --blanco: #ffffff;
+            --gris-suave: #f8f8f8;
+            --sombra: rgba(0,0,0,0.08);
+        }
 
-        @section('meta')
-            <meta charset="utf-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-            <meta name="csrf-token" content="{{ csrf_token() }}">
-            <meta name="robots" content="noindex">
-            <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-            <link rel="icon" type="image/png" href="/favicons/favicon-32x32.png" sizes="32x32">
-            <link rel="icon" type="image/png" href="/favicons/favicon-16x16.png" sizes="16x16">
-            <link rel="manifest" href="/favicons/manifest.json">
-            <link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#bc6e3c">
-            <link rel="shortcut icon" href="/favicons/favicon.ico">
-            <meta name="msapplication-config" content="/favicons/browserconfig.xml">
-            <meta name="theme-color" content="#8257e5">
-        @show
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--fondo-claro); color: var(--texto-oscuro); overflow-x: hidden; font-family: 'Poppins', sans-serif; }
 
-        @section('user-data')
-            @if(!is_null(Auth::user()))
-                <script>
-                    window.PterodactylUser = {!! json_encode(Auth::user()->toVueObject()) !!};
-                </script>
-            @endif
-            @if(!empty($siteConfiguration))
-                <script>
-                    window.SiteConfiguration = {!! json_encode($siteConfiguration) !!};
-                </script>
-            @endif
-        @show
+        /* ─── NAV ─── */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 500;
+            background: rgba(255,255,255,0.97);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 40px;
+            box-shadow: 0 2px 12px var(--sombra);
+        }
+        .nav-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: var(--verde-principal);
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+        .nav-logo span { color: var(--naranja-acento); }
+        .nav-links { display: flex; gap: 28px; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--texto-oscuro);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--verde-principal); }
+        .nav-carrito-btn {
+            background: var(--verde-principal);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s, transform 0.2s;
+            position: relative;
+        }
+        .nav-carrito-btn:hover { background: var(--verde-claro); transform: translateY(-1px); }
+        .carrito-badge {
+            background: var(--naranja-acento);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
 
-        @yield('assets')
-        @include('layouts.scripts')
+        /* ─── HERO ─── */
+        .hero { width: 100%; background-color: #fff; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .hero img { width: 100%; max-width: 1200px; height: auto; display: block; margin: 0 auto; }
 
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+        /* ─── ABOUT ─── */
+        .about-section { padding: 80px 20px; max-width: 900px; margin: 0 auto; text-align: center; animation: fadeIn 1.5s ease-in-out; }
+        .about-section h1 { color: var(--verde-principal); font-size: 2.5rem; margin-bottom: 20px; font-family: 'Playfair Display', serif; }
+        .about-section p { font-size: 1.1rem; line-height: 1.8; color: #555; margin-bottom: 30px; }
+        .btn-principal { display: inline-block; background-color: var(--naranja-acento); color: white; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(204, 107, 41, 0.3); }
+        .btn-principal:hover { background-color: #b55a22; transform: translateY(-3px); box-shadow: 0 6px 12px rgba(204, 107, 41, 0.4); }
 
-        @if(request()->is('auth/*'))
-<style>
-    *, *::before, *::after { box-sizing: border-box; }
+        /* ─── CATEGORIAS ─── */
+        .categorias-section {
+            background: white;
+            padding: 70px 20px;
+        }
+        .section-header { text-align: center; margin-bottom: 48px; }
+        .section-header h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--verde-principal); margin-bottom: 8px; }
+        .section-header p { color: #888; font-size: 1rem; }
 
-    /* ══ FONDO ══ */
-    html, body {
-        font-family: 'Inter', system-ui, sans-serif !important;
-        height: 100%;
-        min-height: 100vh;
-        margin: 0;
-        padding: 0;
-        background: url('https://i.postimg.cc/tTjy9nf0/07bcf0473e9db5b6abc5fc2b93649e91.jpg') no-repeat center center fixed !important;
-        background-size: cover !important;
-        overflow: hidden;
+        .categorias-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .categoria-card {
+            background: var(--fondo-claro);
+            border-radius: 16px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .categoria-card:hover, .categoria-card.activa {
+            border-color: var(--verde-principal);
+            background: white;
+            box-shadow: 0 6px 20px rgba(41,109,54,0.12);
+            transform: translateY(-4px);
+        }
+        .categoria-card .icono {
+            font-size: 2.8rem;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .categoria-card h3 { font-size: 0.95rem; font-weight: 600; color: var(--texto-oscuro); }
+
+        /* ─── MARCAS ─── */
+        .marcas-section { background-color: var(--fondo-claro); padding: 50px 0; overflow: hidden; }
+        .marcas-section h2 { text-align: center; color: var(--verde-principal); margin-bottom: 30px; font-size: 2rem; font-family: 'Playfair Display', serif; }
+        .slider { width: 100%; overflow: hidden; }
+        .slide-track { display: flex; width: calc(250px * 10); animation: scroll 20s linear infinite; }
+        .slide { width: 250px; padding: 0 20px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #888; font-size: 1.2rem; }
+        .slide-caja { background: white; padding: 15px 30px; border-radius: 10px; border: 2px solid #e0e0e0; white-space: nowrap; }
+        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(calc(-250px * 5)); } }
+
+        /* ─── PROMOS ─── */
+        .promos-section { padding: 80px 20px; max-width: 1200px; margin: 0 auto; }
+        .promos-section .section-header h2 { color: var(--naranja-acento); }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 28px;
+        }
+
+        .producto-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--sombra);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .producto-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+
+        .producto-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--fondo-claro);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+        }
+        .badge-promo {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            background: var(--naranja-acento);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .producto-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+        .producto-categoria-tag {
+            font-size: 0.75rem;
+            color: var(--verde-claro);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .producto-nombre { font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; color: var(--texto-oscuro); }
+        .producto-desc { font-size: 0.85rem; color: #888; line-height: 1.5; flex: 1; margin-bottom: 14px; }
+
+        .producto-precio-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+        .precio-actual { font-size: 1.4rem; font-weight: 800; color: var(--verde-principal); }
+        .precio-tachado { font-size: 0.9rem; color: #bbb; text-decoration: line-through; }
+
+        .cantidad-control { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .cantidad-btn { background: var(--fondo-claro); border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 1rem; cursor: pointer; color: var(--texto-oscuro); font-weight: 700; transition: background 0.2s; display: flex; align-items: center; justify-content: center; }
+        .cantidad-btn:hover { background: #dde; }
+        .cantidad-num { font-weight: 700; font-size: 1rem; min-width: 20px; text-align: center; }
+
+        .btn-agregar {
+            width: 100%;
+            background: var(--verde-principal);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-agregar:hover { background: var(--verde-claro); transform: translateY(-1px); }
+        .btn-agregar.agregado { background: var(--naranja-acento); }
+
+        /* ─── FILTROS ─── */
+        .filtros-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 36px;
+            justify-content: center;
+        }
+        .filtro-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #666;
+        }
+        .filtro-btn:hover, .filtro-btn.activo { border-color: var(--verde-principal); color: var(--verde-principal); background: rgba(41,109,54,0.05); }
+
+        /* ─── CARRITO PANEL ─── */
+        .carrito-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.45); z-index: 800; display: none;
+            animation: fadeIn 0.3s;
+        }
+        .carrito-panel {
+            position: fixed; top: 0; right: -420px; width: 420px; max-width: 95vw;
+            height: 100%; background: white; z-index: 900;
+            box-shadow: -8px 0 30px rgba(0,0,0,0.15);
+            transition: right 0.4s cubic-bezier(.4,0,.2,1);
+            display: flex; flex-direction: column;
+        }
+        .carrito-panel.abierto { right: 0; }
+        .carrito-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid #eee;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .carrito-header h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--verde-principal); }
+        .carrito-close { background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888; transition: color 0.2s; }
+        .carrito-close:hover { color: var(--texto-oscuro); }
+        .carrito-items { flex: 1; overflow-y: auto; padding: 20px 24px; }
+        .carrito-vacio { text-align: center; color: #aaa; padding: 60px 20px; }
+        .carrito-vacio i { font-size: 3rem; margin-bottom: 16px; display: block; }
+
+        .carrito-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 14px 0; border-bottom: 1px solid #f0f0f0;
+        }
+        .carrito-item-emoji { font-size: 2.2rem; min-width: 48px; text-align: center; }
+        .carrito-item-info { flex: 1; }
+        .carrito-item-nombre { font-weight: 600; font-size: 0.95rem; }
+        .carrito-item-precio { color: var(--verde-principal); font-weight: 700; font-size: 0.9rem; }
+        .carrito-item-qty { color: #999; font-size: 0.8rem; }
+        .carrito-item-remove { background: none; border: none; color: #ccc; cursor: pointer; font-size: 1rem; transition: color 0.2s; }
+        .carrito-item-remove:hover { color: #e74c3c; }
+
+        .carrito-footer { padding: 20px 24px; border-top: 1px solid #eee; }
+        .carrito-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .carrito-total span:first-child { font-size: 1rem; color: #666; }
+        .carrito-total strong { font-size: 1.4rem; color: var(--verde-principal); }
+        .btn-comprar-todo {
+            width: 100%;
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(37,211,102,0.35);
+        }
+        .btn-comprar-todo:hover { background: #1ea855; transform: translateY(-2px); }
+
+        /* ─── MAPA ─── */
+        .mapa-section { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
+        .mapa-section h2 { color: var(--naranja-acento); margin-bottom: 10px; font-size: 2rem; font-family: 'Playfair Display', serif; }
+        .mapa-section p { font-size: 1.1rem; margin-bottom: 30px; color: #444; }
+        .map-container { border-radius: 15px; overflow: hidden; box-shadow: 0 8px 16px rgba(0,0,0,0.1); border: 4px solid white; }
+
+        /* ─── WHATSAPP ─── */
+        .whatsapp-flotante { position: fixed; width: 60px; height: 60px; bottom: 40px; right: 40px; background-color: #25d366; color: #FFF; border-radius: 50px; text-align: center; font-size: 30px; box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3); z-index: 90; display: flex; align-items: center; justify-content: center; text-decoration: none; animation: pulse 2s infinite; transition: all 0.3s ease; }
+        .whatsapp-flotante:hover { background-color: #128C7E; transform: scale(1.1); }
+
+        /* ─── FOOTER ─── */
+        footer {
+            background: #1a1a2e;
+            color: #ccc;
+            padding: 60px 40px 30px;
+        }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto 40px;
+        }
+        .footer-col h4 {
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+            font-family: 'Playfair Display', serif;
+        }
+        .footer-col p, .footer-col a {
+            font-size: 0.9rem;
+            line-height: 2;
+            color: #aaa;
+            text-decoration: none;
+            display: block;
+            transition: color 0.2s;
+        }
+        .footer-col a:hover { color: var(--amarillo-sol); }
+        .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: white; font-weight: 900; margin-bottom: 10px; }
+        .footer-brand span { color: var(--naranja-acento); }
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 24px;
+            text-align: center;
+            font-size: 0.82rem;
+            color: #666;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .footer-social { display: flex; gap: 14px; margin-top: 16px; }
+        .footer-social a {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: #2a2a3e;
+            display: flex; align-items: center; justify-content: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .footer-social a:hover { background: var(--verde-principal); color: white; }
+
+        /* ─── ANIMACIONES ─── */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            nav { padding: 12px 20px; }
+            .nav-links { display: none; }
+            .whatsapp-flotante { bottom: 20px; right: 20px; }
+            .about-section h1 { font-size: 2rem; }
+            .carrito-panel { width: 100vw; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 110px;
+            right: 40px;
+            background: var(--verde-principal);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            z-index: 9999;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 1.7s forwards;
+            box-shadow: 0 4px 15px rgba(41,109,54,0.4);
+        }
+        @keyframes toastIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes toastOut { from { opacity: 1; } to { opacity: 0; } }
+
+        /* ─── MÉTODOS DE PAGO ─── */
+        .pagos-section {
+            background: white;
+            padding: 80px 20px;
+        }
+        .pagos-section .section-header h2 { color: var(--verde-principal); }
+
+        .pagos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto 48px;
+        }
+
+        .pago-card {
+            border-radius: 18px;
+            border: 2px solid #eee;
+            padding: 28px 20px 22px;
+            text-align: center;
+            background: var(--fondo-claro);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .pago-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.10);
+            border-color: var(--verde-principal);
+        }
+        .pago-card.promo-card {
+            border-color: var(--naranja-acento);
+            background: #fff8f4;
+        }
+        .pago-promo-badge {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: var(--naranja-acento);
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .pago-logo {
+            width: 80px;
+            height: 50px;
+            object-fit: contain;
+            margin: 0 auto 14px;
+            display: block;
+        }
+        .pago-logo-svg {
+            width: 80px;
+            height: 50px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pago-nombre {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--texto-oscuro);
+            margin-bottom: 6px;
+        }
+        .pago-detalle {
+            font-size: 0.8rem;
+            color: #888;
+            line-height: 1.5;
+        }
+
+        .pagos-info-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 14px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .pago-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--fondo-claro);
+            border: 1.5px solid #ddd;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #555;
+        }
+        .pago-chip i { color: var(--verde-principal); font-size: 1rem; }
+    </style>
+</head>
+<body>
+
+    <!-- ─── NAV ─── -->
+    <nav>
+        <div class="nav-logo">Vitamina <span>D</span> Dietética</div>
+        <ul class="nav-links">
+            <li><a href="#categorias">Categorías</a></li>
+            <li><a href="#promos">Promos</a></li>
+            <li><a href="#pagos">Métodos de Pago</a></li>
+            <li><a href="#mapa">Visitanos</a></li>
+        </ul>
+        <button class="nav-carrito-btn" onclick="toggleCarrito()">
+            <i class="fas fa-shopping-basket"></i>
+            Mi carrito
+            <span class="carrito-badge" id="badge">0</span>
+        </button>
+    </nav>
+
+    <!-- ─── HERO ─── -->
+    <header class="hero">
+        <img src="https://i.postimg.cc/QtvPGKbw/Gemini-Generated-Image-vjwhw1vjwhw1vjwh.png" alt="Banner Vitamina D Dietética">
+    </header>
+
+    <!-- ─── ABOUT ─── -->
+    <section class="about-section">
+        <h1>Tu rincón natural</h1>
+        <p>En <strong>Vitamina D Dietética</strong> nos apasiona promover un estilo de vida saludable. Ofrecemos la mejor selección de productos naturales, frutos secos, cereales, suplementos y opciones sin TACC. Nuestro objetivo es brindarte calidad y atención personalizada para que encuentres todo lo que necesitas para tu bienestar.</p>
+        <a href="https://wa.me/5491144468486?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20web%20y%20quiero%20hacer%20un%20pedido." target="_blank" class="btn-principal">
+            Hacer un pedido ahora
+        </a>
+    </section>
+
+    <!-- ─── CATEGORÍAS ─── -->
+    <section class="categorias-section" id="categorias">
+        <div class="section-header">
+            <h2>Nuestras Categorías</h2>
+            <p>Encontrá todo lo que necesitás para tu bienestar</p>
+        </div>
+        <div class="categorias-grid">
+            <div class="categoria-card" onclick="filtrarCategoria('Frutos Secos')">
+                <span class="icono">🥜</span>
+                <h3>Frutos Secos</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Cereales')">
+                <span class="icono">🌾</span>
+                <h3>Cereales</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Suplementos')">
+                <span class="icono">💊</span>
+                <h3>Suplementos</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Sin TACC')">
+                <span class="icono">🌿</span>
+                <h3>Sin TACC</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Infusiones')">
+                <span class="icono">🍵</span>
+                <h3>Infusiones</h3>
+            </div>
+            <div class="categoria-card" onclick="filtrarCategoria('Snacks')">
+                <span class="icono">🍫</span>
+                <h3>Snacks Saludables</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── MARCAS ─── -->
+    <section class="marcas-section">
+        <h2>Marcas con las que trabajamos</h2>
+        <div class="slider">
+            <div class="slide-track">
+                <div class="slide"><div class="slide-caja">Granja del Sol</div></div>
+                <div class="slide"><div class="slide-caja">Arcor Natura</div></div>
+                <div class="slide"><div class="slide-caja">Quaker</div></div>
+                <div class="slide"><div class="slide-caja">Knorr</div></div>
+                <div class="slide"><div class="slide-caja">La Asunción</div></div>
+                <div class="slide"><div class="slide-caja">Granja del Sol</div></div>
+                <div class="slide"><div class="slide-caja">Arcor Natura</div></div>
+                <div class="slide"><div class="slide-caja">Quaker</div></div>
+                <div class="slide"><div class="slide-caja">Knorr</div></div>
+                <div class="slide"><div class="slide-caja">La Asunción</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── PROMOS ─── -->
+    <section class="promos-section" id="promos">
+        <div class="section-header">
+            <h2>🔥 Promos de la semana</h2>
+            <p>Precios especiales en nuestros productos más populares</p>
+        </div>
+
+        <div class="filtros-bar" id="filtros">
+            <button class="filtro-btn activo" onclick="filtrarProductos('todos', this)">Todos</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Frutos Secos', this)">🥜 Frutos Secos</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Cereales', this)">🌾 Cereales</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Suplementos', this)">💊 Suplementos</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Sin TACC', this)">🌿 Sin TACC</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Infusiones', this)">🍵 Infusiones</button>
+            <button class="filtro-btn" onclick="filtrarProductos('Snacks', this)">🍫 Snacks</button>
+        </div>
+
+        <div class="productos-grid" id="productos-grid"></div>
+    </section>
+
+    <!-- ─── MAPA ─── -->
+    <section class="mapa-section" id="mapa">
+        <h2>Visitanos</h2>
+        <p><i class="fas fa-map-marker-alt" style="color: var(--verde-principal);"></i> Nicolás Videla 147, B1878, Quilmes, PBA.</p>
+        <div class="map-container">
+            <iframe src="https://maps.google.com/maps?q=Nicol%C3%A1s%20Videla%20147,%20Quilmes,%20Provincia%20de%20Buenos%20Aires&t=&z=15&ie=UTF8&iwloc=&output=embed" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+    </section>
+
+    <!-- ─── MÉTODOS DE PAGO ─── -->
+    <section class="pagos-section" id="pagos">
+        <div class="section-header">
+            <h2>💳 Métodos de Pago</h2>
+            <p>Aceptamos múltiples formas de pago para tu comodidad</p>
+        </div>
+
+        <div class="pagos-grid">
+
+            <!-- Visa -->
+            <div class="pago-card">
+                <svg class="pago-logo-svg" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="50" rx="8" fill="#1A1F71"/>
+                    <text x="40" y="33" font-family="Arial" font-weight="900" font-size="22" fill="#FFFFFF" text-anchor="middle" letter-spacing="-1">VISA</text>
+                </svg>
+                <div class="pago-nombre">Visa</div>
+                <div class="pago-detalle">Crédito y débito<br>Todos los bancos</div>
+            </div>
+
+            <!-- Mastercard -->
+            <div class="pago-card">
+                <svg class="pago-logo-svg" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="30" cy="25" r="18" fill="#EB001B"/>
+                    <circle cx="50" cy="25" r="18" fill="#F79E1B"/>
+                    <path d="M40 10.8 A18 18 0 0 1 40 39.2 A18 18 0 0 1 40 10.8Z" fill="#FF5F00"/>
+                </svg>
+                <div class="pago-nombre">Mastercard</div>
+                <div class="pago-detalle">Crédito y débito<br>Todos los bancos</div>
+            </div>
+
+            <!-- Mercado Pago -->
+            <div class="pago-card">
+                <svg class="pago-logo-svg" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="50" rx="8" fill="#009EE3"/>
+                    <circle cx="40" cy="22" r="11" fill="white"/>
+                    <path d="M34 22 L38 27 L47 18" stroke="#009EE3" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <text x="40" y="42" font-family="Arial" font-weight="700" font-size="7" fill="white" text-anchor="middle">MERCADO PAGO</text>
+                </svg>
+                <div class="pago-nombre">Mercado Pago</div>
+                <div class="pago-detalle">Tarjetas, QR<br>Dinero en cuenta</div>
+            </div>
+
+            <!-- Cuenta DNI — PROMO -->
+            <div class="pago-card promo-card">
+                <span class="pago-promo-badge">⭐ Promo</span>
+                <svg class="pago-logo-svg" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="50" rx="8" fill="#004A97"/>
+                    <rect x="6" y="12" width="68" height="26" rx="5" fill="white"/>
+                    <text x="40" y="28" font-family="Arial" font-weight="900" font-size="11" fill="#004A97" text-anchor="middle">Cuenta DNI</text>
+                    <text x="40" y="38" font-family="Arial" font-weight="700" font-size="6.5" fill="#004A97" text-anchor="middle">BANCO PROVINCIA</text>
+                </svg>
+                <div class="pago-nombre">Cuenta DNI</div>
+                <div class="pago-detalle">Banco Provincia<br><strong style="color:var(--naranja-acento)">¡Promoción especial!</strong></div>
+            </div>
+
+            <!-- BBVA — PROMO -->
+            <div class="pago-card promo-card">
+                <span class="pago-promo-badge">⭐ Promo</span>
+                <svg class="pago-logo-svg" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="50" rx="8" fill="#004481"/>
+                    <text x="40" y="30" font-family="Arial" font-weight="900" font-size="20" fill="white" text-anchor="middle" letter-spacing="1">BBVA</text>
+                    <rect x="10" y="35" width="60" height="3" rx="1.5" fill="#1BADE4"/>
+                </svg>
+                <div class="pago-nombre">BBVA</div>
+                <div class="pago-detalle">Tarjetas BBVA<br><strong style="color:var(--naranja-acento)">¡Promoción especial!</strong></div>
+            </div>
+
+            <!-- Cuotas -->
+            <div class="pago-card">
+                <svg class="pago-logo-svg" viewBox="0 0 80 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="80" height="50" rx="8" fill="#296d36"/>
+                    <text x="40" y="20" font-family="Arial" font-weight="900" font-size="13" fill="white" text-anchor="middle">HASTA</text>
+                    <text x="40" y="36" font-family="Arial" font-weight="900" font-size="16" fill="#e8c61a" text-anchor="middle">12 CUOTAS</text>
+                </svg>
+                <div class="pago-nombre">Cuotas sin interés</div>
+                <div class="pago-detalle">Hasta 12 cuotas<br>con tarjetas seleccionadas</div>
+            </div>
+
+        </div>
+
+        <!-- chips informativos -->
+        <div class="pagos-info-row">
+            <div class="pago-chip"><i class="fas fa-credit-card"></i> Crédito y débito</div>
+            <div class="pago-chip"><i class="fas fa-university"></i> Todos los bancos</div>
+            <div class="pago-chip"><i class="fas fa-qrcode"></i> Pago con QR</div>
+            <div class="pago-chip"><i class="fas fa-shield-alt"></i> Pago seguro</div>
+            <div class="pago-chip"><i class="fas fa-calendar-check"></i> Hasta 12 cuotas</div>
+        </div>
+    </section>
+
+    <!-- ─── WHATSAPP ─── -->
+    <a href="https://wa.me/5491144468486?text=Hola!%20Vengo%20de%20la%20p%C3%A1gina%20web%20y%20tengo%20una%20consulta." class="whatsapp-flotante" target="_blank" title="Envianos un mensaje">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- ─── FOOTER ─── -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <div class="footer-brand">Vitamina <span>D</span> Dietética</div>
+                <p>Tu tienda de productos naturales y saludables en Quilmes, Buenos Aires.</p>
+                <div class="footer-social">
+                    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/5491144468486" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="mailto:vitamitaD@gmail.com" title="Email"><i class="fas fa-envelope"></i></a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Navegación</h4>
+                <a href="#categorias">Categorías</a>
+                <a href="#promos">Promos</a>
+                <a href="#mapa">Cómo llegar</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <a href="mailto:vitamitaD@gmail.com"><i class="fas fa-envelope" style="margin-right:6px;"></i> vitamitaD@gmail.com</a>
+                <a href="https://wa.me/5491144468486" target="_blank"><i class="fab fa-whatsapp" style="margin-right:6px;"></i> +54 9 11 4446-8486</a>
+                <p><i class="fas fa-map-marker-alt" style="margin-right:6px;"></i> Nicolás Videla 147, Quilmes</p>
+            </div>
+            <div class="footer-col">
+                <h4>Horarios</h4>
+                <p>Lunes a Viernes: 9:00 – 19:00</p>
+                <p>Sábados: 9:00 – 14:00</p>
+                <p>Domingos: Cerrado</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 <strong>Vitamina D Dietética</strong> — Todos los derechos reservados.</p>
+            <p style="margin-top:4px;">Diseño y desarrollo por <strong>Vidmar &amp; Guerrero</strong></p>
+        </div>
+    </footer>
+
+    <!-- ─── CARRITO PANEL ─── -->
+    <div class="carrito-overlay" id="carritoOverlay" onclick="toggleCarrito()"></div>
+    <div class="carrito-panel" id="carritoPanel">
+        <div class="carrito-header">
+            <h3>🛒 Mi Carrito</h3>
+            <button class="carrito-close" onclick="toggleCarrito()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="carrito-items" id="carritoItems">
+            <div class="carrito-vacio" id="carritoVacio">
+                <i class="fas fa-shopping-basket"></i>
+                <p>Tu carrito está vacío</p>
+            </div>
+        </div>
+        <div class="carrito-footer">
+            <div class="carrito-total">
+                <span>Total</span>
+                <strong id="carritoTotal">$0</strong>
+            </div>
+            <button class="btn-comprar-todo" onclick="comprarPorWhatsapp()">
+                <i class="fab fa-whatsapp"></i> Comprar por WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <script>
+    // ─── DATA ───
+    const productos = [
+        { id: 1, nombre: "Mix de Frutos Secos Premium", categoria: "Frutos Secos", emoji: "🥜", precio: 2800, precioAntes: 3500, desc: "Almendras, nueces, castañas y más. 500g.", promo: true },
+        { id: 2, nombre: "Almendras Tostadas sin sal", categoria: "Frutos Secos", emoji: "🌰", precio: 1950, precioAntes: 2400, desc: "Almendras seleccionadas. 250g.", promo: true },
+        { id: 3, nombre: "Avena Integral Orgánica", categoria: "Cereales", emoji: "🌾", precio: 890, precioAntes: 1100, desc: "Avena orgánica en copos. 500g.", promo: true },
+        { id: 4, nombre: "Granola artesanal con miel", categoria: "Cereales", emoji: "🍯", precio: 1650, precioAntes: null, desc: "Con nueces, pasas y miel natural. 400g." },
+        { id: 5, nombre: "Colágeno Hidrolizado", categoria: "Suplementos", emoji: "💊", precio: 3200, precioAntes: 3900, desc: "Colágeno tipo 1 y 3. 300g.", promo: true },
+        { id: 6, nombre: "Proteína Vegana Vainilla", categoria: "Suplementos", emoji: "🌱", precio: 4500, precioAntes: null, desc: "Base de arroz y arveja. 500g." },
+        { id: 7, nombre: "Pan Sin TACC Multigranos", categoria: "Sin TACC", emoji: "🍞", precio: 1200, precioAntes: 1450, desc: "Sin gluten, sin tacc. 400g.", promo: true },
+        { id: 8, nombre: "Galletitas de Arroz", categoria: "Sin TACC", emoji: "🌿", precio: 750, precioAntes: null, desc: "Sin gluten, ideales para snackear. 150g." },
+        { id: 9, nombre: "Té Verde Detox Blend", categoria: "Infusiones", emoji: "🍵", precio: 980, precioAntes: 1200, desc: "Con jengibre y limón. 30 saquitos.", promo: true },
+        { id: 10, nombre: "Yerba Mate Con Hierbas", categoria: "Infusiones", emoji: "🧉", precio: 1100, precioAntes: null, desc: "Blend especial con menta y burrito. 500g." },
+        { id: 11, nombre: "Barritas de Cereal Caseras", categoria: "Snacks", emoji: "🍫", precio: 650, precioAntes: 800, desc: "Avena, miel y chocolate. Pack x6.", promo: true },
+        { id: 12, nombre: "Chips de Banana Deshidratada", categoria: "Snacks", emoji: "🍌", precio: 870, precioAntes: null, desc: "100% natural, sin azúcar agregada. 200g." },
+    ];
+
+    let carrito = {};
+    let cantidades = {};
+    productos.forEach(p => { cantidades[p.id] = 1; });
+
+    // ─── RENDER PRODUCTOS ───
+    function renderProductos(lista) {
+        const grid = document.getElementById('productos-grid');
+        grid.innerHTML = '';
+        lista.forEach(p => {
+            const enCarrito = carrito[p.id];
+            grid.innerHTML += `
+            <div class="producto-card" data-cat="${p.categoria}">
+                <div class="producto-img">
+                    ${p.emoji}
+                    ${p.promo ? '<span class="badge-promo">🔥 Promo</span>' : ''}
+                </div>
+                <div class="producto-body">
+                    <div class="producto-categoria-tag">${p.categoria}</div>
+                    <div class="producto-nombre">${p.nombre}</div>
+                    <div class="producto-desc">${p.desc}</div>
+                    <div class="producto-precio-row">
+                        <span class="precio-actual">$${p.precio.toLocaleString('es-AR')}</span>
+                        ${p.precioAntes ? `<span class="precio-tachado">$${p.precioAntes.toLocaleString('es-AR')}</span>` : ''}
+                    </div>
+                    <div class="cantidad-control">
+                        <button class="cantidad-btn" onclick="cambiarCantidad(${p.id}, -1)">−</button>
+                        <span class="cantidad-num" id="qty-${p.id}">${cantidades[p.id]}</span>
+                        <button class="cantidad-btn" onclick="cambiarCantidad(${p.id}, 1)">+</button>
+                    </div>
+                    <button class="btn-agregar ${enCarrito ? 'agregado' : ''}" id="btn-${p.id}" onclick="agregarAlCarrito(${p.id})">
+                        <i class="fas ${enCarrito ? 'fa-check' : 'fa-cart-plus'}"></i>
+                        ${enCarrito ? '¡Agregado!' : 'Agregar al carrito'}
+                    </button>
+                </div>
+            </div>`;
+        });
     }
 
-    body::before {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background: rgba(8, 6, 18, 0.78);
-        z-index: 0;
-        pointer-events: none;
+    // ─── FILTROS ───
+    function filtrarProductos(cat, btn) {
+        document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+        if (btn) btn.classList.add('activo');
+        const filtrados = cat === 'todos' ? productos : productos.filter(p => p.categoria === cat);
+        renderProductos(filtrados);
+        document.getElementById('promos').scrollIntoView({ behavior: 'smooth' });
     }
 
-    body::after {
-        content: '';
-        position: fixed;
-        inset: 0;
-        background:
-            radial-gradient(ellipse 600px 400px at 15% 40%, rgba(124,77,255,0.13) 0%, transparent 65%),
-            radial-gradient(ellipse 400px 500px at 85% 65%, rgba(80,20,200,0.09) 0%, transparent 65%);
-        z-index: 0;
-        pointer-events: none;
+    function filtrarCategoria(cat) {
+        document.getElementById('promos').scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+            document.querySelectorAll('.filtro-btn').forEach(b => {
+                if (b.textContent.includes(cat)) { b.classList.add('activo'); b.click(); }
+                else b.classList.remove('activo');
+            });
+            filtrarProductos(cat, null);
+        }, 400);
     }
 
-    /* ══ NEUTRALIZAR PTERODACTYL ══ */
-    body > div:not(#login-sidebar),
-    body > div:not(#login-sidebar) > div,
-    body > div:not(#login-sidebar) > div > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        border-radius: 0 !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        display: contents !important;
-    }
-
-    [class*="sc-"]:not(#login-sidebar *),
-    [class*="Container"]:not(#login-sidebar *),
-    [class*="Wrapper"]:not(#login-sidebar *),
-    [class*="Box-"]:not(#login-sidebar *),
-    [class*="Card-"]:not(#login-sidebar *) {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    h2, [class*="FlexRow"], [class*="Copyright"] {
-        display: none !important;
-    }
-
-    /* ══ SIDEBAR ══ */
-    #login-sidebar {
-        position: fixed !important;
-        left: 0 !important;
-        top: 0 !important;
-        bottom: 0 !important;
-        width: 300px !important;
-        z-index: 20 !important;
-        background: rgba(10, 7, 24, 0.60) !important;
-        backdrop-filter: blur(28px) saturate(150%) !important;
-        -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
-        border-right: 1px solid rgba(255,255,255,0.07) !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-between !important;
-        padding: 44px 32px !important;
-        box-shadow: 4px 0 40px rgba(0,0,0,0.45) !important;
-        animation: slideInLeft 0.9s cubic-bezier(0.22, 1, 0.36, 1) both !important;
-    }
-
-    @keyframes slideInLeft {
-        from { opacity: 0; transform: translateX(-48px); }
-        to   { opacity: 1; transform: translateX(0); }
-    }
-
-    #login-sidebar::before {
-        content: '' !important;
-        position: absolute !important;
-        top: 0 !important; left: 0 !important; right: 0 !important;
-        height: 2px !important;
-        background: linear-gradient(90deg, transparent, rgba(124,77,255,0.7), transparent) !important;
-    }
-
-    .sb-top { display: flex; flex-direction: column; gap: 8px; }
-    .sb-brand { display: flex; align-items: center; gap: 10px; }
-
-    .sb-dot {
-        width: 9px; height: 9px;
-        border-radius: 50%;
-        background: #7c4dff;
-        box-shadow: 0 0 12px rgba(124,77,255,0.9);
-        animation: dotPulse 2.5s ease-in-out infinite;
-        flex-shrink: 0;
-    }
-
-    @keyframes dotPulse {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.4); opacity: 0.65; }
-    }
-
-    .sb-brand-name { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.88); letter-spacing: 0.2px; }
-    .sb-sub { font-size: 11px; color: rgba(180,170,220,0.45); letter-spacing: 0.4px; padding-left: 19px; }
-
-    .sb-tagline {
-        font-size: 26px; font-weight: 600;
-        color: rgba(255,255,255,0.90);
-        line-height: 1.38; letter-spacing: -0.4px;
-    }
-
-    .sb-tagline em {
-        font-style: normal;
-        background: linear-gradient(135deg, #c4b5fd 0%, #7c3aed 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-    }
-
-    .sb-features { display: flex; flex-direction: column; gap: 14px; }
-
-    .sb-feat {
-        display: flex; align-items: flex-start; gap: 12px;
-        padding: 12px 14px;
-        background: rgba(124,77,255,0.06);
-        border: 1px solid rgba(124,77,255,0.12);
-        border-radius: 14px;
-        transition: background 0.25s, border-color 0.25s;
-    }
-
-    .sb-feat:hover { background: rgba(124,77,255,0.11); border-color: rgba(124,77,255,0.22); }
-
-    .sb-feat-icon { font-size: 18px; line-height: 1; margin-top: 1px; flex-shrink: 0; }
-
-    .sb-feat-body strong { display: block; font-size: 13px; font-weight: 500; color: rgba(225,218,255,0.88); margin-bottom: 2px; }
-    .sb-feat-body span { font-size: 12px; color: rgba(180,170,220,0.50); line-height: 1.4; }
-
-    .sb-footer { font-size: 10.5px; color: rgba(255,255,255,0.18); letter-spacing: 0.3px; }
-
-    /* ══ MÉTODOS DE PAGO ══ */
-    .sb-payments {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .sb-pay-title {
-        font-size: 10px;
-        font-weight: 600;
-        letter-spacing: 0.8px;
-        text-transform: uppercase;
-        color: rgba(180,170,220,0.50);
-    }
-
-    .sb-pay-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 8px;
-    }
-
-    .sb-pay-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 7px 10px;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.07);
-        border-radius: 10px;
-        transition: background 0.2s, border-color 0.2s;
-    }
-
-    .sb-pay-item:hover {
-        background: rgba(255,255,255,0.07);
-        border-color: rgba(255,255,255,0.12);
-    }
-
-    .sb-pay-item svg {
-        flex-shrink: 0;
-        border-radius: 3px;
-    }
-
-    .sb-pay-item span {
-        font-size: 11px;
-        color: rgba(210,205,240,0.70);
-        line-height: 1.3;
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-    }
-
-    .sb-pay-promo {
-        border-color: rgba(124,77,255,0.20) !important;
-        background: rgba(124,77,255,0.06) !important;
-    }
-
-    .sb-pay-promo:hover {
-        background: rgba(124,77,255,0.10) !important;
-    }
-
-    .sb-promo-badge {
-        font-size: 9px !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.5px;
-        color: rgba(196,181,253,0.9) !important;
-        background: rgba(124,77,255,0.25);
-        border-radius: 4px;
-        padding: 1px 5px;
-        display: inline-block !important;
-    }
-
-    /* ══ FORMULARIO ══ */
-    form {
-        position: fixed !important;
-        left: calc(300px + (100vw - 300px) / 2) !important;
-        top: 50% !important;
-        transform: translate(-50%, -50%) !important;
-        z-index: 10 !important;
-        margin: 0 !important;
-
-        background: rgba(14, 11, 30, 0.65) !important;
-        backdrop-filter: blur(32px) saturate(160%) !important;
-        -webkit-backdrop-filter: blur(32px) saturate(160%) !important;
-
-        border: 1px solid rgba(255,255,255,0.07) !important;
-        border-top: 1px solid rgba(255,255,255,0.13) !important;
-        border-radius: 26px !important;
-        padding: 44px 44px 40px !important;
-        width: 380px !important;
-
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-
-        box-shadow:
-            0 0 0 1px rgba(124,77,255,0.08),
-            0 32px 72px -12px rgba(0,0,0,0.80),
-            0 8px 20px rgba(0,0,0,0.45),
-            inset 0 1px 0 rgba(255,255,255,0.07) !important;
-
-        animation: fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both !important;
-    }
-
-    @keyframes fadeUp {
-        from { opacity: 0; transform: translate(-50%, calc(-50% + 20px)) scale(0.97); }
-        to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-    }
-
-    form::before {
-        content: '' !important;
-        display: block !important;
-        width: 160px !important;
-        height: 160px !important;
-        background: url('https://i.postimg.cc/MZ4wGLhW/unnamed-removebg-preview.png') no-repeat center / contain !important;
-        margin: -20px auto 20px auto !important;
-        filter: drop-shadow(0 8px 24px rgba(124,77,255,0.50)) !important;
-        flex-shrink: 0 !important;
-        transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), filter 0.4s ease !important;
-    }
-
-    form:hover::before {
-        transform: scale(1.06) translateY(-4px) !important;
-        filter: drop-shadow(0 14px 32px rgba(124,77,255,0.65)) !important;
-    }
-
-    form img { display: none !important; }
-
-    form > div {
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        margin-bottom: 18px !important;
-        padding: 0 !important;
-    }
-
-    label {
-        color: rgba(200, 190, 240, 0.58) !important;
-        font-size: 10.5px !important;
-        font-weight: 500 !important;
-        letter-spacing: 0.9px !important;
-        text-transform: uppercase !important;
-        margin-bottom: 8px !important;
-        display: block !important;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"] {
-        width: 100% !important;
-        background: rgba(255,255,255,0.045) !important;
-        border: 1px solid rgba(255,255,255,0.09) !important;
-        border-bottom: 1px solid rgba(255,255,255,0.16) !important;
-        border-radius: 13px !important;
-        padding: 13px 16px !important;
-        color: #ede9ff !important;
-        font-family: 'Inter', sans-serif !important;
-        font-size: 14px !important;
-        outline: none !important;
-        display: block !important;
-        transition: border-color 0.25s, background 0.25s, box-shadow 0.25s !important;
-        box-shadow: inset 0 1px 4px rgba(0,0,0,0.3) !important;
-    }
-
-    input[type="text"]:hover,
-    input[type="email"]:hover,
-    input[type="password"]:hover {
-        border-color: rgba(255,255,255,0.18) !important;
-        background: rgba(255,255,255,0.07) !important;
-    }
-
-    input[type="text"]:focus,
-    input[type="email"]:focus,
-    input[type="password"]:focus {
-        background: rgba(124,77,255,0.09) !important;
-        border-color: rgba(154,117,240,0.65) !important;
-        box-shadow: 0 0 0 4px rgba(124,77,255,0.13), inset 0 1px 3px rgba(0,0,0,0.2) !important;
-    }
-
-    input::placeholder { color: rgba(255,255,255,0.18) !important; }
-
-    button[type="submit"] {
-        width: 100% !important;
-        padding: 14px 20px !important;
-        margin-top: 8px !important;
-        background: linear-gradient(155deg, #8b5cf6 0%, #6d28d9 55%, #5b21b6 100%) !important;
-        color: #fff !important;
-        font-family: 'Inter', sans-serif !important;
-        font-size: 13px !important;
-        font-weight: 600 !important;
-        letter-spacing: 0.8px !important;
-        text-transform: uppercase !important;
-        border: 1px solid rgba(255,255,255,0.14) !important;
-        border-radius: 13px !important;
-        cursor: pointer !important;
-        display: block !important;
-        transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s !important;
-        box-shadow: 0 4px 20px rgba(109,40,217,0.5), inset 0 1px 0 rgba(255,255,255,0.12) !important;
-    }
-
-    button[type="submit"]:hover {
-        transform: translateY(-2px) !important;
-        background: linear-gradient(155deg, #9468ff 0%, #7733e8 55%, #6424c8 100%) !important;
-        box-shadow: 0 8px 32px rgba(109,40,217,0.6), inset 0 1px 0 rgba(255,255,255,0.15) !important;
-    }
-
-    button[type="submit"]:active {
-        transform: translateY(1px) scale(0.99) !important;
-        transition-duration: 0.08s !important;
-    }
-
-    a {
-        color: rgba(196, 181, 253, 0.55) !important;
-        font-size: 12px !important;
-        font-weight: 500 !important;
-        text-decoration: none !important;
-        display: block !important;
-        margin-top: 16px !important;
-        text-align: center !important;
-        transition: color 0.2s !important;
-    }
-
-    a:hover { color: #c4b5fd !important; }
-
-    .grecaptcha-badge { visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
-
-    .g-recaptcha,
-    div[class*="recaptcha"] {
-        margin-top: 18px !important;
-        display: flex !important;
-        justify-content: center !important;
-    }
-
-    .g-recaptcha iframe,
-    div[class*="recaptcha"] iframe {
-        border-radius: 13px !important;
-        filter: hue-rotate(260deg) saturate(0.6) brightness(0.75) !important;
-        transition: filter 0.3s ease !important;
-        border: 1px solid rgba(255,255,255,0.09) !important;
-        box-shadow: 0 4px 16px rgba(0,0,0,0.4) !important;
-    }
-
-    .g-recaptcha iframe:hover,
-    div[class*="recaptcha"] iframe:hover {
-        filter: hue-rotate(260deg) saturate(0.8) brightness(0.88) !important;
-    }
-
-    @media (max-width: 700px) {
-        #login-sidebar { display: none !important; }
-        form {
-            left: 50% !important;
-            width: min(380px, calc(100vw - 40px)) !important;
+    // ─── CANTIDAD ───
+    function cambiarCantidad(id, delta) {
+        cantidades[id] = Math.max(1, (cantidades[id] || 1) + delta);
+        const el = document.getElementById('qty-' + id);
+        if (el) el.textContent = cantidades[id];
+        if (carrito[id]) {
+            carrito[id].cantidad = cantidades[id];
+            renderCarrito();
         }
     }
-</style>
-        @endif
-    </head>
-    <body class="{{ $css['body'] ?? 'bg-neutral-50' }}">
-        @section('content')
-            @yield('above-container')
-            @yield('container')
-            @yield('below-container')
-        @show
-        @section('scripts')
-            {!! $asset->js('main.js') !!}
-        @show
 
-        @if(request()->is('auth/*'))
-        <div id="login-sidebar">
-            <div class="sb-top">
-                <div class="sb-brand">
-                    <div class="sb-dot"></div>
-                    <span class="sb-brand-name">{{ config('app.name', 'Panel') }}</span>
+    // ─── CARRITO ───
+    function agregarAlCarrito(id) {
+        const p = productos.find(x => x.id === id);
+        const qty = cantidades[id] || 1;
+        if (carrito[id]) {
+            carrito[id].cantidad += qty;
+        } else {
+            carrito[id] = { ...p, cantidad: qty };
+        }
+        renderCarrito();
+        const btn = document.getElementById('btn-' + id);
+        if (btn) {
+            btn.classList.add('agregado');
+            btn.innerHTML = '<i class="fas fa-check"></i> ¡Agregado!';
+        }
+        showToast(`✅ ${p.nombre} agregado`);
+        actualizarBadge();
+    }
+
+    function quitarDelCarrito(id) {
+        delete carrito[id];
+        renderCarrito();
+        const btn = document.getElementById('btn-' + id);
+        if (btn) {
+            btn.classList.remove('agregado');
+            btn.innerHTML = '<i class="fas fa-cart-plus"></i> Agregar al carrito';
+        }
+        actualizarBadge();
+    }
+
+    function renderCarrito() {
+        const items = Object.values(carrito);
+        const container = document.getElementById('carritoItems');
+        const vacio = document.getElementById('carritoVacio');
+        if (items.length === 0) {
+            container.innerHTML = '<div class="carrito-vacio" id="carritoVacio"><i class="fas fa-shopping-basket"></i><p>Tu carrito está vacío</p></div>';
+            document.getElementById('carritoTotal').textContent = '$0';
+            return;
+        }
+        container.innerHTML = items.map(item => `
+            <div class="carrito-item">
+                <span class="carrito-item-emoji">${item.emoji}</span>
+                <div class="carrito-item-info">
+                    <div class="carrito-item-nombre">${item.nombre}</div>
+                    <div class="carrito-item-precio">$${(item.precio * item.cantidad).toLocaleString('es-AR')}</div>
+                    <div class="carrito-item-qty">Cantidad: ${item.cantidad}</div>
                 </div>
-                <span class="sb-sub">Panel de control</span>
+                <button class="carrito-item-remove" onclick="quitarDelCarrito(${item.id})"><i class="fas fa-trash-alt"></i></button>
             </div>
+        `).join('');
+        const total = items.reduce((sum, i) => sum + i.precio * i.cantidad, 0);
+        document.getElementById('carritoTotal').textContent = '$' + total.toLocaleString('es-AR');
+        actualizarBadge();
+    }
 
-            <div class="sb-tagline">
-                Controlá tu<br>servidor con<br><em>total libertad.</em>
-            </div>
+    function actualizarBadge() {
+        const total = Object.values(carrito).reduce((s, i) => s + i.cantidad, 0);
+        document.getElementById('badge').textContent = total;
+    }
 
-            <div class="sb-features">
-                <div class="sb-feat">
-                    <div class="sb-feat-icon">&#9889;</div>
-                    <div class="sb-feat-body">
-                        <strong>Alto rendimiento</strong>
-                        <span>Recursos dedicados para tu servidor</span>
-                    </div>
-                </div>
-                <div class="sb-feat">
-                    <div class="sb-feat-icon">&#128737;</div>
-                    <div class="sb-feat-body">
-                        <strong>Protección DDoS</strong>
-                        <span>Tu servidor siempre en línea</span>
-                    </div>
-                </div>
-                <div class="sb-feat">
-                    <div class="sb-feat-icon">&#127918;</div>
-                    <div class="sb-feat-body">
-                        <strong>Panel intuitivo</strong>
-                        <span>Gestión simple desde cualquier lugar</span>
-                    </div>
-                </div>
-            </div>
+    function toggleCarrito() {
+        const panel = document.getElementById('carritoPanel');
+        const overlay = document.getElementById('carritoOverlay');
+        const isOpen = panel.classList.contains('abierto');
+        if (isOpen) {
+            panel.classList.remove('abierto');
+            overlay.style.display = 'none';
+        } else {
+            panel.classList.add('abierto');
+            overlay.style.display = 'block';
+        }
+    }
 
-            <div class="sb-payments">
-                <div class="sb-pay-title">Métodos de pago · Cuotas</div>
-                <div class="sb-pay-grid">
-                    <div class="sb-pay-item">
-                        <svg viewBox="0 0 38 24" width="38" height="24"><rect width="38" height="24" rx="4" fill="#1A1F71"/><rect x="0" y="8" width="38" height="8" fill="#F7B600"/><text x="5" y="17" font-size="7" font-weight="bold" fill="white" font-family="Arial">VISA</text></svg>
-                        <span>Visa</span>
-                    </div>
-                    <div class="sb-pay-item">
-                        <svg viewBox="0 0 38 24" width="38" height="24"><rect width="38" height="24" rx="4" fill="#252525"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><ellipse cx="19" cy="12" rx="3" ry="7" fill="#FF5F00"/></svg>
-                        <span>Mastercard</span>
-                    </div>
-                    <div class="sb-pay-item">
-                        <svg viewBox="0 0 38 24" width="38" height="24"><rect width="38" height="24" rx="4" fill="#009EE3"/><text x="4" y="10" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">mercado</text><text x="4" y="18" font-size="5.5" font-weight="bold" fill="white" font-family="Arial">pago</text><circle cx="32" cy="12" r="5" fill="#00B1EA" opacity="0.6"/></svg>
-                        <span>Mercado Pago</span>
-                    </div>
-                    <div class="sb-pay-item sb-pay-promo">
-                        <svg viewBox="0 0 38 24" width="38" height="24"><rect width="38" height="24" rx="4" fill="#00B2E2"/><text x="4" y="11" font-size="5" font-weight="bold" fill="white" font-family="Arial">CUENTA</text><text x="4" y="19" font-size="5" font-weight="bold" fill="white" font-family="Arial">DNI</text><rect x="26" y="4" width="8" height="16" rx="2" fill="white" opacity="0.2"/></svg>
-                        <span>Cuenta DNI <span class="sb-promo-badge">PROMO</span></span>
-                    </div>
-                    <div class="sb-pay-item sb-pay-promo">
-                        <svg viewBox="0 0 38 24" width="38" height="24"><rect width="38" height="24" rx="4" fill="#004A97"/><text x="3" y="14" font-size="8" font-weight="bold" fill="white" font-family="Arial">BBVA</text><rect x="26" y="6" width="9" height="5" rx="1" fill="#009FDB"/><rect x="26" y="13" width="9" height="5" rx="1" fill="#009FDB"/></svg>
-                        <span>BBVA <span class="sb-promo-badge">PROMO</span></span>
-                    </div>
-                    <div class="sb-pay-item">
-                        <svg viewBox="0 0 38 24" width="38" height="24"><rect width="38" height="24" rx="4" fill="#2C3E7B"/><text x="3" y="10" font-size="4.5" fill="white" font-family="Arial" font-weight="bold">TODOS</text><text x="3" y="16" font-size="4.5" fill="white" font-family="Arial">LOS BANCOS</text><rect x="26" y="5" width="8" height="14" rx="2" fill="rgba(255,255,255,0.15)"/><rect x="28" y="8" width="4" height="2" rx="1" fill="white"/><rect x="28" y="12" width="4" height="2" rx="1" fill="white"/></svg>
-                        <span>Todos los bancos</span>
-                    </div>
-                </div>
-            </div>
+    // ─── COMPRAR POR WHATSAPP ───
+    function comprarPorWhatsapp() {
+        const items = Object.values(carrito);
+        if (items.length === 0) {
+            showToast('⚠️ Tu carrito está vacío');
+            return;
+        }
+        let lineas = items.map(i => `• ${i.nombre} (x${i.cantidad}) — $${(i.precio * i.cantidad).toLocaleString('es-AR')}`).join('\n');
+        const total = items.reduce((s, i) => s + i.precio * i.cantidad, 0);
+        const msg = `Hola buenas! 😊 Quiero comprar los siguientes productos:\n\n${lineas}\n\n💰 *Total: $${total.toLocaleString('es-AR')}*\n\n¿Podría confirmar disponibilidad y coordinar la entrega? ¡Muchas gracias!`;
+        const url = `https://wa.me/5491144468486?text=${encodeURIComponent(msg)}`;
+        window.open(url, '_blank');
+    }
 
-            <div class="sb-footer">&#169; {{ date('Y') }} {{ config('app.name', 'Panel') }}. Todos los derechos reservados.</div>
-        </div>
-        @endif
-    </body>
+    // ─── TOAST ───
+    function showToast(msg) {
+        const t = document.createElement('div');
+        t.className = 'toast';
+        t.textContent = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 2200);
+    }
+
+    // ─── INIT ───
+    renderProductos(productos);
+    </script>
+</body>
 </html>
